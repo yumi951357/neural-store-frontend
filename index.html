@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neural Store | Fiverr System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Neural Store Dashboard</h1>
+    <p>Run your 3 digital employees on the Render backend</p>
+  </header>
+
+  <main>
+    <section id="task-input">
+      <textarea id="task" placeholder="Describe the client task here..."></textarea>
+      <button onclick="runPipeline()">Run Neural Pipeline</button>
+    </section>
+
+    <section id="progress">
+      <div id="status">Waiting for input...</div>
+    </section>
+
+    <section id="output">
+      <h2>Output</h2>
+      <pre id="result"></pre>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
