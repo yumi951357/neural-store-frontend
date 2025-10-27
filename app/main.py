@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 from pathlib import Path
@@ -29,7 +29,84 @@ def append_audit(event: str, payload: dict):
     LOG_FILE.write_text(LOG_FILE.read_text() + json.dumps(record) + "\n" if LOG_FILE.exists() else json.dumps(record) + "\n")
     return record["record_hash"]
 
-# === Models ===
+# === Agent task distribution ===
+class AgentTaskRequest(BaseModel):
+    agent: str
+    task: str
+    category: str
+    payload: Optional[Dict[str, Any]] = None
+
+@app.post("/agent/task")
+async def dispatch_agent_task(req: AgentTaskRequest):
+    """Dispatch tasks to appropriate agents"""
+    
+    # Agent routing configuration
+    agent_endpoints = {
+        "Prometheus": {
+            "generate_gig_assets": "/agent/prometheus/generate_assets",
+            "auto_reply": "/agent/prometheus/auto_reply"
+        },
+        "Mnemosyne": {
+            "generate_doc": "/agent/mnemosyne/generate_document",
+            "archive_log": "/agent/mnemosyne/archive"
+        },
+        "Hermes": {
+            "deploy_to_fiverr": "/agent/hermes/deploy",
+            "sync_render": "/agent/hermes/sync"
+        }
+    }
+    
+    # Validate agent and task
+    if req.agent not in agent_endpoints:
+        raise HTTPException(status_code=400, detail=f"Unknown agent: {req.agent}")
+    
+    if req.task not in agent_endpoints[req.agent]:
+        raise HTTPException(status_code=400, detail=f"Unknown task for agent {req.agent}: {req.task}")
+    
+    # Log the task dispatch
+    append_audit("agent_task_dispatch", {
+        "agent": req.agent,
+        "task": req.task,
+        "category": req.category,
+        "endpoint": agent_endpoints[req.agent][req.task]
+    })
+    
+    # Return routing information (actual implementation would call the agent endpoints)
+    return {
+        "status": "dispatched",
+        "agent": req.agent,
+        "task": req.task,
+        "endpoint": agent_endpoints[req.agent][req.task],
+        "category": req.category,
+        "timestamp": int(time.time())
+    }
+
+# === Agent placeholder endpoints ===
+@app.post("/agent/prometheus/generate_assets")
+async def prometheus_generate_assets():
+    return {"status": "Placeholder - Prometheus generate_assets endpoint"}
+
+@app.post("/agent/prometheus/auto_reply")
+async def prometheus_auto_reply():
+    return {"status": "Placeholder - Prometheus auto_reply endpoint"}
+
+@app.post("/agent/mnemosyne/generate_document")
+async def mnemosyne_generate_document():
+    return {"status": "Placeholder - Mnemosyne generate_document endpoint"}
+
+@app.post("/agent/mnemosyne/archive")
+async def mnemosyne_archive():
+    return {"status": "Placeholder - Mnemosyne archive endpoint"}
+
+@app.post("/agent/hermes/deploy")
+async def hermes_deploy():
+    return {"status": "Placeholder - Hermes deploy endpoint"}
+
+@app.post("/agent/hermes/sync")
+async def hermes_sync():
+    return {"status": "Placeholder - Hermes sync endpoint"}
+
+# === Original models and routes (unchanged) ===
 class GigAssetsRequest(BaseModel):
     category: str
 
@@ -63,3 +140,13 @@ def fetch_metrics():
 @app.get("/health")
 def health():
     return {"ok": True}
+
+# === Agent health check ===
+@app.get("/agents/health")
+def agents_health():
+    return {
+        "prometheus": "active",
+        "mnemosyne": "active",
+        "hermes": "active",
+        "timestamp": int(time.time())
+    }

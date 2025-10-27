@@ -1,4 +1,4 @@
-const API_URL = "https://oracle-philosophy-backend.onrender.com";
+const API_URL = "https://fiverr-automation-backend.onrender.com";
 
 async function runPipeline() {
   const task = document.getElementById('task').value.trim();
