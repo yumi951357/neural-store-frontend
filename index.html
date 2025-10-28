@@ -1,18 +1,20 @@
+index.html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neural Store | Fiverr System</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neural Store Dashboard</title>
+  <link rel="stylesheet" href="./style.css" />
+  <!-- 加上favicon -->
+  <link rel="icon" type="image/png" href="./favicon.png" />
 </head>
 <body>
-  <header>
+  <main>
     <h1>Neural Store Dashboard</h1>
     <p>Run your 3 digital employees on the Render backend</p>
-  </header>
 
-  <main>
     <section id="input">
       <input id="company" placeholder="Company name" />
       <input id="industry" placeholder="Industry (e.g. AI Healthcare)" />
@@ -25,17 +27,12 @@
       <button id="runBtn">Generate Business Plan</button>
     </section>
 
-    <section id="progress">
-      <div id="status">Waiting for input...</div>
-    </section>
-
     <section id="output">
       <h2>Output</h2>
       <pre id="result"></pre>
-      <button id="download" style="display:none">Download as .txt</button>
     </section>
   </main>
 
-  <script src="app.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>
