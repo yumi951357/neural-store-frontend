@@ -1,5 +1,80 @@
 const API_URL = "https://fiverr-automation-backend.onrender.com";
 
+// ========== 商业计划生成函数 ==========
+async function generateBusinessPlan() {
+  const company = document.getElementById('company').value.trim();
+  const industry = document.getElementById('industry').value.trim();
+  const tone = document.getElementById('tone').value.trim();
+  const length = document.getElementById('length').value;
+  
+  const status = document.getElementById('status');
+  const result = document.getElementById('result');
+
+  if (!company || !industry) {
+    status.innerText = "Please enter company name and industry.";
+    return;
+  }
+
+  try {
+    status.innerText = "🔄 Generating business plan...";
+    
+    const response = await fetch(`${API_URL}/neural/businessplan`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        company: company,
+        industry: industry,
+        tone: tone,
+        length: length
+      })
+    });
+    
+    const plan = await response.json();
+    
+    if (plan.error) {
+      status.innerText = "❌ Error: " + plan.error;
+      return;
+    }
+    
+    status.innerText = "✅ Business Plan generated successfully!";
+    result.innerHTML = `
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;">
+        <h3 style="margin-top: 0; color: #2c3e50;">${plan.title || 'Business Plan'}</h3>
+        <p><strong>Company:</strong> ${plan.company || company}</p>
+        <p><strong>Industry:</strong> ${plan.industry || industry}</p>
+        <p><strong>Tone:</strong> ${plan.tone || tone}</p>
+        <p><strong>Length:</strong> ${plan.length || length}</p>
+      </div>
+      <hr>
+      <div style="white-space: pre-wrap; background: white; padding: 15px; border-radius: 4px;">
+        ${plan.content || 'No content generated'}
+      </div>
+      <button onclick="downloadBusinessPlan()" style="padding: 10px 20px; margin: 15px 0; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        📥 Download Business Plan
+      </button>
+    `;
+    
+  } catch (e) {
+    status.innerText = "❌ Error generating business plan";
+    console.error(e);
+    result.innerText = String(e?.message || e);
+  }
+}
+
+function downloadBusinessPlan() {
+  const content = document.getElementById('result').innerText;
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'business-plan.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ========== 原有的三段式流程函数 ==========
 async function runPipeline() {
   const task = document.getElementById('task').value.trim();
   const status = document.getElementById('status');
@@ -38,7 +113,7 @@ async function runPipeline() {
   }
 }
 
-// ========== 新增报告生成函数 ==========
+// ========== 报告生成函数 ==========
 async function generateReport() {
   const topic = document.getElementById('topic').value.trim();
   const status = document.getElementById('status');

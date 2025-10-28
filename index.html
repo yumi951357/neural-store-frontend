@@ -13,9 +13,31 @@
   </header>
 
   <main>
-    <section id="task-input">
-      <textarea id="task" placeholder="Describe the client task here..."></textarea>
-      <button onclick="runPipeline()">Run Neural Pipeline</button>
+    <!-- 商业计划生成部分 -->
+    <section id="business-plan-section">
+      <h3>Generate Business Plan</h3>
+      
+      <div class="input-group">
+        <input type="text" id="company" placeholder="Company name" />
+      </div>
+      
+      <div class="input-group">
+        <input type="text" id="industry" placeholder="Industry (e.g. AI Healthcare)" />
+      </div>
+      
+      <div class="input-group">
+        <input type="text" id="tone" placeholder="Tone (e.g. professional, investor-ready)" value="professional" />
+      </div>
+      
+      <div class="input-group">
+        <select id="length">
+          <option value="short">Short</option>
+          <option value="standard" selected>Standard</option>
+          <option value="long">Long</option>
+        </select>
+      </div>
+      
+      <button id="runBtn" onclick="generateBusinessPlan()">Generate Business Plan</button>
     </section>
 
     <section id="progress">

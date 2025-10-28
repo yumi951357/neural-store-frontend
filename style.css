@@ -6,10 +6,18 @@ body {
   margin: 0;
   padding: 0;
 }
+
 header {
   padding: 2em 0;
   border-bottom: 1px solid #00ffc6;
 }
+
+/* 任务输入区域 */
+#task-input {
+  margin: 20px 0;
+  padding: 20px;
+}
+
 textarea {
   width: 80%;
   height: 100px;
@@ -21,22 +29,137 @@ textarea {
   border-radius: 5px;
   padding: 10px;
 }
+
+/* 商业计划区域 */
+#business-plan-section {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #00ffc6;
+  border-radius: 8px;
+  background: #111;
+}
+
+.input-group {
+  margin: 15px 0;
+}
+
+.input-group input, .input-group select {
+  width: 300px;
+  padding: 10px;
+  background: #000;
+  color: #00ffc6;
+  border: 1px solid #00ffc6;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+.input-group input::placeholder {
+  color: #00ffc6;
+  opacity: 0.7;
+}
+
+/* 报告生成区域 */
+#report-section {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #ffcc00;
+  border-radius: 8px;
+  background: #111;
+}
+
+#report-section input {
+  width: 300px;
+  padding: 10px;
+  background: #000;
+  color: #ffcc00;
+  border: 1px solid #ffcc00;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+#report-section input::placeholder {
+  color: #ffcc00;
+  opacity: 0.7;
+}
+
+/* 按钮样式 */
 button {
   background: #00ffc6;
   color: #000;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
+  margin: 10px 5px;
+  transition: all 0.3s ease;
 }
-button:hover { background: #00e0b0; }
-#progress { margin-top: 20px; }
+
+button:hover {
+  background: #00e0b0;
+  transform: translateY(-2px);
+}
+
+/* 报告生成按钮特殊样式 */
+#report-section button {
+  background: #ffcc00;
+  color: #000;
+}
+
+#report-section button:hover {
+  background: #e6b800;
+}
+
+/* 进度显示 */
+#progress {
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #00ffc6;
+}
+
+/* 输出区域 */
+#output {
+  margin: 30px 0;
+}
+
 pre {
   background: #111;
-  padding: 15px;
+  padding: 20px;
   border-radius: 5px;
   width: 80%;
   margin: 20px auto;
   color: #ffcc00;
   white-space: pre-wrap;
+  border: 1px solid #ffcc00;
+  text-align: left;
+  max-height: 500px;
+  overflow-y: auto;
 }
+
+/* 下载按钮样式 */
+pre button {
+  background: #ffcc00;
+  color: #000;
+  margin: 10px 0;
+}
+
+pre button:hover {
+  background: #e6b800;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  textarea, .input-group input, .input-group select, #report-section input {
+    width: 90%;
+  }
+  
+  pre {
+    width: 90%;
+  }
+}
+
+/* 状态颜色 */
+.status-waiting { color: #00ffc6; }
+.status-processing { color: #ffcc00; }
+.status-success { color: #00ffc6; }
+.status-error { color: #ff4444; }
