@@ -1,76 +1,67 @@
 const API_URL = "https://fiverr-automation-backend.onrender.com";
 
-// ========== 商业计划生成函数 ==========
-async function generateBusinessPlan() {
+const btn = document.getElementById('runBtn');
+const statusEl = document.getElementById('status');
+const resultEl = document.getElementById('result');
+const dl = document.getElementById('download');
+
+btn.onclick = runBusinessPlan;
+dl.onclick = downloadTxt;
+
+async function runBusinessPlan() {
   const company = document.getElementById('company').value.trim();
   const industry = document.getElementById('industry').value.trim();
-  const tone = document.getElementById('tone').value.trim();
+  const tone = document.getElementById('tone').value.trim() || "professional";
   const length = document.getElementById('length').value;
-  
-  const status = document.getElementById('status');
-  const result = document.getElementById('result');
 
   if (!company || !industry) {
-    status.innerText = "Please enter company name and industry.";
+    statusEl.innerText = "Please enter both company and industry.";
     return;
   }
 
   try {
-    status.innerText = "🔄 Generating business plan...";
-    
-    const response = await fetch(`${API_URL}/neural/businessplan`, {
+    btn.disabled = true;
+    dl.style.display = 'none';
+    statusEl.innerText = "Generating business plan...";
+    const res = await fetch(`${API_URL}/neural/businessplan`, {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        company: company,
-        industry: industry,
-        tone: tone,
-        length: length
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ company, industry, tone, length })
     });
-    
-    const plan = await response.json();
-    
-    if (plan.error) {
-      status.innerText = "❌ Error: " + plan.error;
-      return;
-    }
-    
-    status.innerText = "✅ Business Plan generated successfully!";
-    result.innerHTML = `
-      <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;">
-        <h3 style="margin-top: 0; color: #2c3e50;">${plan.title || 'Business Plan'}</h3>
-        <p><strong>Company:</strong> ${plan.company || company}</p>
-        <p><strong>Industry:</strong> ${plan.industry || industry}</p>
-        <p><strong>Tone:</strong> ${plan.tone || tone}</p>
-        <p><strong>Length:</strong> ${plan.length || length}</p>
-      </div>
-      <hr>
-      <div style="white-space: pre-wrap; background: white; padding: 15px; border-radius: 4px;">
-        ${plan.content || 'No content generated'}
-      </div>
-      <button onclick="downloadBusinessPlan()" style="padding: 10px 20px; margin: 15px 0; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        📥 Download Business Plan
-      </button>
-    `;
-    
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    statusEl.innerText = "✅ Complete.";
+    const text = formatPlan(data);
+    resultEl.textContent = text;
+    dl.dataset.payload = text;
+    dl.style.display = 'inline-block';
   } catch (e) {
-    status.innerText = "❌ Error generating business plan";
     console.error(e);
-    result.innerText = String(e?.message || e);
+    statusEl.innerText = "❌ Error — see console.";
+  } finally {
+    btn.disabled = false;
   }
 }
 
-function downloadBusinessPlan() {
-  const content = document.getElementById('result').innerText;
-  const blob = new Blob([content], { type: 'text/plain' });
+function formatPlan(data) {
+  const header = `# ${data.title || "Business Plan"}\n\n`;
+  const outline = data.outline ? "Outline:\n- " + data.outline.join("\n- ") + "\n\n" : "";
+  const body = data.sections ? data.sections.map(s => `## ${s.heading}\n${s.content}\n`).join("\n") : "";
+  const summary = data.summary ? `## Summary\n${data.summary}\n` : "";
+  return header + outline + body + summary;
+}
+
+function downloadTxt() {
+  const blob = new Blob([dl.dataset.payload || ""], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'business-plan.txt';
+  a.download = "business_plan.txt";
   document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
+  a.remove();
   URL.revokeObjectURL(url);
 }
 

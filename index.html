@@ -3,52 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neural Store | Fiverr System</title>
+  <title>Neural Store Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Neural Store Dashboard</h1>
-    <p>Run your 3 digital employees on the Render backend</p>
-  </header>
+  <h1>Neural Store Dashboard</h1>
+  <h2>Run your 3 digital employees on the Render backend</h2>
 
-  <main>
-    <!-- 商业计划生成部分 -->
-    <section id="business-plan-section">
-      <h3>Generate Business Plan</h3>
-      
-      <div class="input-group">
-        <input type="text" id="company" placeholder="Company name" />
-      </div>
-      
-      <div class="input-group">
-        <input type="text" id="industry" placeholder="Industry (e.g. AI Healthcare)" />
-      </div>
-      
-      <div class="input-group">
-        <input type="text" id="tone" placeholder="Tone (e.g. professional, investor-ready)" value="professional" />
-      </div>
-      
-      <div class="input-group">
-        <select id="length">
-          <option value="short">Short</option>
-          <option value="standard" selected>Standard</option>
-          <option value="long">Long</option>
-        </select>
-      </div>
-      
-      <button id="runBtn" onclick="generateBusinessPlan()">Generate Business Plan</button>
-    </section>
+  <section id="input">
+    <input id="company" placeholder="Company name" />
+    <input id="industry" placeholder="Industry (e.g. AI Healthcare)" />
+    <input id="tone" placeholder="Tone (e.g. professional, investor-ready)" />
+    <select id="length">
+      <option value="short">Short</option>
+      <option value="standard" selected>Standard</option>
+      <option value="long">Long</option>
+    </select>
+    <button id="runBtn">Generate Business Plan</button>
+  </section>
 
-    <section id="progress">
-      <div id="status">Waiting for input...</div>
-    </section>
+  <section id="progress"><div id="status">Ready.</div></section>
 
-    <section id="output">
-      <h2>Output</h2>
-      <pre id="result"></pre>
-    </section>
-  </main>
+  <section id="output">
+    <h2>Output</h2>
+    <pre id="result"></pre>
+    <button id="download" style="display:none;">Download .txt</button>
+  </section>
 
   <script src="app.js"></script>
 </body>
