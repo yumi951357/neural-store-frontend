@@ -1,53 +1,24 @@
-// app.js — Neural Store Dashboard (PDF增强版)
-// by Infinity (无垠) × 人世间
+// app.js — Neural Store Frontend (fixed to call /api/plan)
+
+const API = "https://fiverr-automation-backend.onrender.com/api/plan";
 
 async function runPipeline() {
   const btn = document.getElementById("runBtn");
-  const outputBox = document.getElementById("output");
+  const out = document.getElementById("output");
+  const taskInput = document.getElementById("task");
+  const prompt = (taskInput?.value || "").trim() || "Generate a practical Fiverr automation plan.";
+
   btn.disabled = true;
-  btn.innerText = "⏳ Generating...";
-  outputBox.innerText = "";
+  btn.innerText = "⏳ 生成中…";
+  out.textContent = "";
 
   try {
-    // 🔹 发请求到后端
-    const response = await fetch("https://fiverr-automation-backend.onrender.com/neural/generator", {
+    const res = await fetch(API, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        prompt: "Generate a detailed Fiverr Automation Business Plan in English."
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
     });
+    if (!res.ok) throw new Error("HTTP " + res.status);
 
-    if (!response.ok) {
-      throw new Error(`Server returned ${response.status}`);
-    }
-
-    const data = await response.json();
-    const text = data.output || data.message || "⚠️ No output received from backend.";
-
-    // 🔹 显示结果
-    outputBox.innerText = text;
-
-    // 🔹 自动生成 PDF 文件
-    generatePDF(text);
-
-  } catch (err) {
-    outputBox.innerText = "❌ Error: " + err.message;
-  } finally {
-    btn.disabled = false;
-    btn.innerText = "Run Neural Pipeline";
-  }
-}
-
-// 📄 PDF 生成函数
-function generatePDF(content) {
-  const element = document.createElement("a");
-  const file = new Blob([content], { type: "application/pdf" });
-  element.href = URL.createObjectURL(file);
-  element.download = "Fiverr_Automation_Plan.pdf";
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element);
-}
+    const data = await res.json();
+    const text = data.            
