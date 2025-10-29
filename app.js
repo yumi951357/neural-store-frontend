@@ -1,3 +1,20 @@
+async function runPipeline() {
+  const input = document.getElementById("input").value;
+
+  const res = await fetch("https://fiverr-automation-backend.onrender.com/neural/generator", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": "brotherkey123"
+    },
+    body: JSON.stringify({ prompt: input })  // ✅ 一定要这一行！
+  });
+
+  const data = await res.json();
+  document.getElementById("output").textContent = data.output || "No output received.";
+}
+
+
 async function runPipeline(endpoint) {
   const input = document.getElementById("input").value;
 
