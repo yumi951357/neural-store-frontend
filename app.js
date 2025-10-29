@@ -13,42 +13,50 @@ async function runPipeline() {
   status.innerText = "Agent 1: Generating content...";
 
   try {
-    const gen = await fetch(`${API_URL}/neural/generator`, {
+    // Step 1: Generator
+    const genRes = await fetch(`${API_URL}/neural/generator`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": "brotherkey123"
       },
       body: JSON.stringify({ prompt: task })
-    }).then(r => r.json());
+    });
+    const gen = await genRes.json();
 
     status.innerText = "Agent 2: Refining content...";
 
-    const ref = await fetch(`${API_URL}/neural/refiner`, {
+    // Step 2: Refiner
+    const refRes = await fetch(`${API_URL}/neural/refiner`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": "brotherkey123"
       },
       body: JSON.stringify({ text: gen.output })
-    }).then(r => r.json());
+    });
+    const ref = await refRes.json();
 
-    status.innerText = "Agent 3: Verifying and finalizing...";
+    status.innerText = "Agent 3: Verifying output...";
 
-    const ver = await fetch(`${API_URL}/neural/verifier`, {
+    // Step 3: Verifier
+    const verRes = await fetch(`${API_URL}/neural/verifier`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": "brotherkey123"
       },
       body: JSON.stringify({ text: ref.output })
-    }).then(r => r.json());
+    });
+    const ver = await verRes.json();
 
     status.innerText = "✅ Complete.";
-    result.innerText = ver.output || ref.output || gen.output || "No output received.";
+    result.innerText = ver.output || "No output received.";
 
   } catch (err) {
     status.innerText = "❌ Error";
     result.innerText = "Error: " + err.message;
   }
 }
+
+window.runPipeline = runPipeline;
