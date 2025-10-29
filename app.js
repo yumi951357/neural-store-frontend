@@ -11,11 +11,10 @@ async function runPipeline() {
   });
 
   const data = await res.json();
-  document.getElementById("output").textContent = data.output || "No output received.";
+  displayOutput(data);
 }
 
-
-async function runPipeline(endpoint) {
+async function runPipelineWithEndpoint(endpoint) {
   const input = document.getElementById("input").value;
 
   const res = await fetch(`https://fiverr-automation-backend.onrender.com/neural/${endpoint}`, {
@@ -28,5 +27,17 @@ async function runPipeline(endpoint) {
   });
 
   const data = await res.json();
-  document.getElementById("output").textContent = data.output || "No output received.";
+  displayOutput(data);
+}
+
+function displayOutput(data) {
+  const outputBox = document.getElementById("output");
+  
+  // 安全保护：防止空响应
+  if (!data || Object.keys(data).length === 0) {
+    outputBox.textContent = "No output received (empty response)";
+    return;
+  }
+  
+  outputBox.textContent = data.output || "No output received.";
 }
