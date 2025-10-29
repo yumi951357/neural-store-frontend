@@ -1,12 +1,7 @@
 async function runPipeline() {
   const input = document.getElementById("taskInput").value.trim();
   const outputBox = document.getElementById("outputBox");
-  if (!input) {
-    outputBox.innerText = "⚠️ 请先输入任务。";
-    return;
-  }
-
-  outputBox.innerText = "🌀 正在运行神经管道...\n";
+  outputBox.innerText = "Running neural pipeline...\n";
 
   const endpoints = ["generator", "refiner", "verifier"];
   const apiKey = "brotherkey123";
@@ -14,7 +9,7 @@ async function runPipeline() {
 
   for (const endpoint of endpoints) {
     try {
-      const response = await fetch(`https://fiverr-automation-backend.onrender.com/neural/${endpoint}`, {
+      const res = await fetch(`https://fiverr-automation-backend.onrender.com/neural/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,16 +18,12 @@ async function runPipeline() {
         body: JSON.stringify({ prompt: input })
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        resultText += `${data.output}\n`;
-      } else {
-        resultText += `❌ ${endpoint} 失败: HTTP ${response.status}\n`;
-      }
+      const data = await res.json();
+      resultText += `${endpoint.toUpperCase()} → ${data.output}\n`;
     } catch (err) {
-      resultText += `❌ ${endpoint} 错误: ${err.message}\n`;
+      resultText += `${endpoint.toUpperCase()} → Error: ${err.message}\n`;
     }
   }
 
-  outputBox.innerText = resultText || "❌ 未收到输出。";
+  outputBox.innerText = resultText;
 }
