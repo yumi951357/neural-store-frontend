@@ -39,7 +39,6 @@ function displayOutput(data) {
     return;
   }
   
-  outputBox.textContent = `Verified plan delivery for: ${
-    data.task || data.title || data.result || data.message || "AI Business Plan"
-  }`;
+  // 修复：直接使用 data.output
+  outputBox.textContent = data.output || "No output received.";
 }
