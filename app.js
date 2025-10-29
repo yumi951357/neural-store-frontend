@@ -11,35 +11,17 @@ async function runPipeline() {
   }
 
   status.innerText = "Agent 1: Generating content...";
-  const gen = await fetch(`${API_URL}/neural/generator`, {
+  
+  const response = await fetch(`${API_URL}/neural/generator`, {
     method: "POST",
     headers: { 
       "Content-Type": "application/json",
       "x-api-key": "brotherkey123"
     },
     body: JSON.stringify({ prompt: task })
-  }).then(r => r.json());
-
-  status.innerText = "Agent 2: Refining content...";
-  const ref = await fetch(`${API_URL}/neural/refiner`, {
-    method: "POST",
-    headers: { 
-      "Content-Type": "application/json",
-      "x-api-key": "brotherkey123"
-    },
-    body: JSON.stringify({ prompt: task })
-  }).then(r => r.json());
-
-  status.innerText = "Agent 3: Verifying and finalizing...";
-  const ver = await fetch(`${API_URL}/neural/verifier`, {
-    method: "POST",
-    headers: { 
-      "Content-Type": "application/json",
-      "x-api-key": "brotherkey123"
-    },
-    body: JSON.stringify({ prompt: task })
-  }).then(r => r.json());
-
+  });
+  
+  const data = await response.json();
   status.innerText = "✅ Complete.";
-  result.innerText = data.outputplan delivery for: data.message || "No output received.";
+  result.innerText = data.output || "No output received.";
 }
