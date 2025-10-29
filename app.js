@@ -13,7 +13,6 @@ async function runPipeline() {
   status.innerText = "Agent 1: Generating content...";
 
   try {
-    // Step 1: Generator
     const genRes = await fetch(`${API_URL}/neural/generator`, {
       method: "POST",
       headers: {
@@ -26,7 +25,6 @@ async function runPipeline() {
 
     status.innerText = "Agent 2: Refining content...";
 
-    // Step 2: Refiner
     const refRes = await fetch(`${API_URL}/neural/refiner`, {
       method: "POST",
       headers: {
@@ -39,7 +37,6 @@ async function runPipeline() {
 
     status.innerText = "Agent 3: Verifying output...";
 
-    // Step 3: Verifier
     const verRes = await fetch(`${API_URL}/neural/verifier`, {
       method: "POST",
       headers: {
