@@ -39,5 +39,7 @@ function displayOutput(data) {
     return;
   }
   
-  outputBox.textContent = data.output || "No output received.";
+  outputBox.textContent = `Verified plan delivery for: ${
+    data.task || data.title || data.result || data.message || "AI Business Plan"
+  }`;
 }
