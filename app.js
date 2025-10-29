@@ -41,5 +41,5 @@ async function runPipeline() {
   }).then(r => r.json());
 
   status.innerText = "✅ Complete.";
-  result.innerText = ver.output || "No output received.";
+  result.innerText = data.outputplan delivery for: data.message || "No output received.";
 }
